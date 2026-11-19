@@ -83,3 +83,14 @@ describe('import validation', () => {
     expect(() => sanitize(null)).toThrow();
   });
 });
+
+describe('demo data', () => {
+  it('starts at Skybridge so one completion unlocks the next stage', async () => {
+    const { demoState } = await import('../src/domain/store');
+    const d = demoState();
+    expect(totalXp(d.events)).toBe(500);
+    expect(levelFor(500).stage.name).toBe('Skybridge');
+    expect(levelFor(540).stage.name).toBe('Windmill Rise');
+    expect(d.sessions.every((x) => x.demo)).toBe(true);
+  });
+});

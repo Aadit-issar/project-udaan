@@ -129,12 +129,13 @@ export function createUdaanScene(container: HTMLElement, opts: SceneOptions): Ud
     lampBulb = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 8), new THREE.MeshStandardMaterial({ color: 0xfff1d6, emissive: 0xffb466, emissiveIntensity: 3 }));
     lampBulb.position.set(0.27, 0.43, 0);
     lamp.add(base, arm1, arm2, shade, lampBulb);
-    lamp.position.set(-0.55, 0.765, -0.12);
+    lamp.position.set(-0.66, 0.765, 0.02);
+    lamp.scale.setScalar(0.78);
     lamp.traverse((o) => (o.userData.action = 'lamp'));
     desk.add(lamp);
     if (!lowPerf) {
       lampLight = new THREE.PointLight(0xffb36b, 2.4, 2.4, 1.6);
-      lampLight.position.set(-0.28, 1.15, -0.12);
+      lampLight.position.set(-0.45, 1.06, 0.02);
       desk.add(lampLight);
     }
     // Books + mug: small, warm details.
@@ -155,9 +156,9 @@ export function createUdaanScene(container: HTMLElement, opts: SceneOptions): Ud
     desk.position.set(0, 0, -0.75);
     scene.add(desk);
 
-    timerPanel.group.position.set(0.5, 1.32, -1.2);
+    timerPanel.group.position.set(0.5, 1.4, -1.2);
     timerPanel.group.rotation.y = -0.3;
-    boardPanel.group.position.set(-0.5, 1.32, -1.2);
+    boardPanel.group.position.set(-0.5, 1.4, -1.2);
     boardPanel.group.rotation.y = 0.3;
     board.add(timerPanel.group, boardPanel.group);
     scene.add(board);
@@ -175,8 +176,8 @@ export function createUdaanScene(container: HTMLElement, opts: SceneOptions): Ud
   controls.enableDamping = !reducedMotion;
   controls.enablePan = false;
   if (kind === 'room') {
-    camera.position.set(0, 1.42, 0.75);
-    controls.target.set(0, 1.12, -0.95);
+    camera.position.set(0, 1.5, 0.42);
+    controls.target.set(0, 1.27, -1.0);
     controls.minDistance = 0.6;
     controls.maxDistance = 5.5;
     controls.maxPolarAngle = Math.PI * 0.62;
@@ -197,6 +198,8 @@ export function createUdaanScene(container: HTMLElement, opts: SceneOptions): Ud
     if (renderer.xr.isPresenting) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
+    // Portrait screens: widen the vertical FOV so both room panels stay in view.
+    camera.fov = (kind === "room" ? 58 : 45) * (w / h < 1 ? 1.45 : 1);
     camera.updateProjectionMatrix();
   };
   const ro = new ResizeObserver(resize);
@@ -548,6 +551,6 @@ export async function detectXR(): Promise<{ vr: boolean; ar: boolean; note: stri
   return {
     vr,
     ar,
-    note: vr || ar ? '' : 'WebXR is present but no headset or AR runtime is available on this device. The 3D room works right here on screen.',
+    note: vr || ar ? '' : 'No VR headset detected here — the 3D view works on screen. Open this page in a WebXR headset browser (e.g. Meta Quest) to enter VR.',
   };
 }

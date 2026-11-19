@@ -306,11 +306,29 @@ export function demoState(): UdaanState {
     id: uid(), title, subject, importance, dueAt, estimateMin, status: 'todo', createdAt: nowIso(), updatedAt: nowIso(), completedAt: null, pinned: false,
     subtasks: quest ? questSteps(title).map((t) => ({ id: uid(), title: t, done: false })) : [],
   });
+  // A believable week of history so the Skyworld is already growing (500 XP = Skybridge);
+  // finishing the Chemistry task (+40) unlocks Windmill Rise live during a demo.
+  const done = (title: string, subject: string, daysAgo: number): Task => {
+    const t = mk(title, subject, 2, at(-daysAgo, 20), 30);
+    return { ...t, status: 'done', completedAt: at(-daysAgo, 19), createdAt: at(-daysAgo - 2, 9) };
+  };
+  const doneTasks = [done('Hindi essay draft', 'Hindi', 4), done('Physics numericals: motion', 'Physics', 3), done('Biology diagram practice', 'Biology', 2), done('Geography map work', 'Geography', 1)];
+  const sessions = [[5, 25], [4, 25], [3, 40], [2, 30], [1, 25], [1, 25]].map(([daysAgo, min], i) => {
+    const t = doneTasks[i % doneTasks.length];
+    return { id: uid(), taskId: t.id, taskTitle: t.title, intendedMin: min, startedAt: at(-daysAgo, 17), endedAt: at(-daysAgo, 18), pausedMs: 0, focusedMin: min, status: 'completed' as const, intention: '', demo: true };
+  });
+  const events: UdaanState['events'] = [
+    ...sessions.map((x) => ({ id: `session:${x.id}`, type: 'session-complete' as const, refId: x.id, label: `${x.focusedMin} min focus · ${x.taskTitle}`, at: x.endedAt, xp: sessionXp(x.focusedMin) })),
+    ...doneTasks.map((t) => ({ id: `task:${t.id}`, type: 'task-complete' as const, refId: t.id, label: `Completed · ${t.title}`, at: t.completedAt!, xp: XP.task })),
+  ].sort((a, b) => a.at.localeCompare(b.at));
   return {
     ...emptyState(),
     onboarded: true,
     settings: { ...DEFAULT_SETTINGS, name: 'Demo Student' },
+    sessions,
+    events,
     tasks: [
+      ...doneTasks,
       mk('Revise Chemistry Equilibrium', 'Chemistry', 3, at(1, 9), 40),
       mk('Mathematics practice: quadratic equations', 'Maths', 2, at(2, 17), 35),
       mk('Prepare English presentation', 'English', 2, at(7, 10), 90, true),

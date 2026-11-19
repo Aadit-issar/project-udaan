@@ -288,7 +288,7 @@ export function makeSky(): THREE.Mesh {
 /** A soft sea of clouds far below the islands, as one instanced mesh. */
 export function makeClouds(count: number): THREE.InstancedMesh {
   const geo = new THREE.IcosahedronGeometry(1, 1);
-  const m = new THREE.MeshStandardMaterial({ color: 0xf7dccb, roughness: 1, flatShading: true, transparent: true, opacity: 0.92 });
+  const m = new THREE.MeshStandardMaterial({ color: 0xfff1e6, roughness: 1, flatShading: true, transparent: true, opacity: 0.78 });
   const inst = new THREE.InstancedMesh(geo, m, count);
   const d = new THREE.Object3D();
   let s = 42;
@@ -296,8 +296,8 @@ export function makeClouds(count: number): THREE.InstancedMesh {
   for (let i = 0; i < count; i++) {
     const a = rnd() * Math.PI * 2;
     const r = 7 + rnd() * 34;
-    d.position.set(Math.cos(a) * r, -6.5 - rnd() * 3, Math.sin(a) * r);
-    const sc = 1.6 + rnd() * 3.2;
+    d.position.set(Math.cos(a) * r, -7.5 - rnd() * 3, Math.sin(a) * r);
+    const sc = 1.1 + rnd() * 2.4;
     d.scale.set(sc * 1.6, sc * 0.55, sc);
     d.rotation.y = rnd() * 3;
     d.updateMatrix();

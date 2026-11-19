@@ -265,3 +265,6 @@ main { padding: 32px clamp(16px, 4vw, 48px) 120px; max-width: 1240px; width: 100
 
 .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation: none !important; transition: none !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+a.btn { text-decoration: none; }
+.rail-foot .demo-flag { display: flex; width: max-content; }
