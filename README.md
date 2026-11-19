@@ -7,6 +7,9 @@ UDAAN (Hindi: *flight*) is a calm, offline-first study companion for students wh
 - **Live app:** https://aadit-issar.github.io/project-udaan/
 - **Demo guide:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md)
 
+<p><img src="docs/screenshots/desktop-02-dashboard.png" width="62%" alt="Dashboard"> <img src="docs/screenshots/mobile-03-help-me-start.png" width="22%" alt="Help Me Start on mobile"></p>
+<p><img src="docs/screenshots/desktop-05-focus-room.png" width="42%" alt="3D Focus Room"> <img src="docs/screenshots/desktop-07-world.png" width="42%" alt="Progress World"></p>
+
 ## What works
 
 | Area | What it does |
@@ -37,7 +40,8 @@ npm run build    # production build into dist/
 ## Testing status (honest)
 
 - Unit tests: prioritisation, quest templates, timestamp timer, XP idempotency, import validation.
-- Browser-checked in desktop Chromium (Playwright): navigation, onboarding, demo mode, 3D room render.
+- `node scripts/smoke.mjs <url>` — Playwright walk-through (desktop 1440×900 + mobile 390×844) of onboarding → demo → Help Me Start → Task Quest → 3D Focus Room → demo session → Skyworld → Settings. Live site: **0 console errors, 0 failed requests**.
+- `node scripts/xr-check.mjs <url>` — with a *mocked* `navigator.xr`, confirms the Enter VR button appears and calls `requestSession('immersive-vr', { optionalFeatures: ['local-floor','bounded-floor','hand-tracking'] })`, and that failures surface in the UI.
 - **VR:** implemented against the standard WebXR Device API. *Not yet verified on physical headset hardware.* On desktops without a headset the Enter VR button is hidden and an explanation is shown. To test: open the live URL in the Meta Quest Browser → Focus Room → **Enter VR**.
 - **AR:** optional; only offered when `immersive-ar` is reported supported (e.g. Chrome on ARCore Android). Not hardware-tested.
 
